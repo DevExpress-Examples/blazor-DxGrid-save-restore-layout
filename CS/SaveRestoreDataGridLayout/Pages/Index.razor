@@ -12,7 +12,7 @@
                 <DxDataGridColumn Field="@nameof(WeatherForecast.TemperatureC)"></DxDataGridColumn>
                 <DxDataGridColumn Field="@nameof(WeatherForecast.TemperatureF)"></DxDataGridColumn>
                 <DxDataGridColumn Field="@nameof(WeatherForecast.Summary)"></DxDataGridColumn>
-                <DxDataGridDateEditColumn Field="@nameof(WeatherForecast.Date)" DisplayFormatString="D"></DxDataGridDateEditColumn>
+                <DxDataGridDateEditColumn Field="@nameof(WeatherForecast.Date)" DisplayFormat="D"></DxDataGridDateEditColumn>
             </DxDataGrid>
         </div>
         <div class="col-2">
@@ -26,12 +26,12 @@
                 <DxDataGridColumn Field="@nameof(WeatherForecast.TemperatureC)"></DxDataGridColumn>
                 <DxDataGridColumn Field="@nameof(WeatherForecast.TemperatureF)"></DxDataGridColumn>
                 <DxDataGridColumn Field="@nameof(WeatherForecast.Summary)"></DxDataGridColumn>
-                <DxDataGridDateEditColumn Field="@nameof(WeatherForecast.Date)" DisplayFormatString="D"></DxDataGridDateEditColumn>
+                <DxDataGridDateEditColumn Field="@nameof(WeatherForecast.Date)" DisplayFormat="D"></DxDataGridDateEditColumn>
             </DxDataGrid>
         </div>
         <div class="col-2">
             Available layouts:
-            <DxListBox Data="@Layouts" @bind-SelectedItems="@SelectedLayout" SelectionMode="ListBoxSelectionMode.Single">
+            <DxListBox TData="string" TValue="string" Data="@Layouts" @bind-SelectedItems="@SelectedLayout" SelectionMode="ListBoxSelectionMode.Single">
             </DxListBox>
             <div class="p-2">
                 <button class="btn btn-light" @onclick="SaveLayout">Save current layout</button>
