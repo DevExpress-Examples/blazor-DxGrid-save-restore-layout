@@ -14,7 +14,7 @@
 
 The Data Grid was moved to maintenance support mode. No new features/capabilities will be added to this component. We recommend that you [migrate](https://docs.devexpress.com/Blazor/403162/grid/migrate-from-data-grid-to-grid) to the [Grid](https://docs.devexpress.com/Blazor/403143/grid) component. 
 
-This example illustrates how to use the [LayoutChanged][0], [LayoutRestoring][1] events and the [SaveLayout][2] and [LoadLayout][3] methods to save layout information to some storage. After that this information can be restored and applied to DxDataGrid
+This example illustrates how to use the [LayoutChanged][0], [LayoutRestoring][1] events and the [SaveLayout][2] and [LoadLayout][3] methods to save layout information to some storage. After that this information can be restored and applied to DxDataGrid.
 
 *Note: as this example illustrates a general approach, layout information is stored in the [UserLayoutManager](./CS/SaveRestoreDataGridLayout/Data/UserLayoutManager.cs) singleton service. This service doesn't identify the current end user.*
 
