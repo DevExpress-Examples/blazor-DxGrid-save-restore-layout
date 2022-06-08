@@ -1,0 +1,96 @@
+﻿@page "/"
+@using SaveRestoreDataGridLayout.Data
+@inject WeatherForecastService ForecastService
+@inject IJSRuntime JSRuntime
+@inject UserLayoutManager CurrentLayout
+
+<div class="container">
+    <div class="row p-2">
+        <div class="col-10">
+            <p>Save layout automatically <button class="btn btn-light" @onclick="@(async () => { await JSRuntime.InvokeVoidAsync("ReloadPage"); })">Reload page</button></p>
+            <DxDataGrid Data="@Data" ShowGroupPanel="true" PageSize="5" LayoutChanged="OnLayoutChanged"
+                        LayoutRestoring="OnLayoutRestoring">
+                <DxDataGridColumn Field="@nameof(WeatherForecast.TemperatureC)"></DxDataGridColumn>
+                <DxDataGridColumn Field="@nameof(WeatherForecast.TemperatureF)"></DxDataGridColumn>
+                <DxDataGridColumn Field="@nameof(WeatherForecast.Summary)"></DxDataGridColumn>
+                <DxDataGridDateEditColumn Field="@nameof(WeatherForecast.Date)" DisplayFormat="D"></DxDataGridDateEditColumn>
+            </DxDataGrid>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-light" @onclick="@(async () => { CurrentLayout.UpdateCurrentLayout(""); await JSRuntime.InvokeVoidAsync("ReloadPage"); })">Reset layout</button>
+        </div>
+    </div>
+    <div class="row p-2">
+        <div class="col-10">
+            <p>Save layout by a button <button class="btn btn-light" @onclick="@(async () => { await JSRuntime.InvokeVoidAsync("ReloadPage"); })">Reload page</button></p>
+            <DxDataGrid @ref="MyDataGrid" Data="@Data" ShowGroupPanel="true" PageSize="5">
+                <DxDataGridColumn Field="@nameof(WeatherForecast.TemperatureC)"></DxDataGridColumn>
+                <DxDataGridColumn Field="@nameof(WeatherForecast.TemperatureF)"></DxDataGridColumn>
+                <DxDataGridColumn Field="@nameof(WeatherForecast.Summary)"></DxDataGridColumn>
+                <DxDataGridDateEditColumn Field="@nameof(WeatherForecast.Date)" DisplayFormat="D"></DxDataGridDateEditColumn>
+            </DxDataGrid>
+        </div>
+        <div class="col-2">
+            Available layouts:
+            <DxListBox TData="string" TValue="string" Data="@Layouts" @bind-SelectedItems="@SelectedLayout" SelectionMode="ListBoxSelectionMode.Single">
+            </DxListBox>
+            <div class="p-2">
+                <button class="btn btn-light" @onclick="SaveLayout">Save current layout</button>
+            </div>
+            @if (SelectedLayout.Count() > 0) {
+                <div class="p-2">
+                    <button class="btn btn-light" @onclick="LoadLayout">Load layout</button>
+                    <button class="btn btn-light" @onclick="RemoveLayout">Remove layout</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code{
+    public WeatherForecast[]? Data;
+    private IEnumerable<string> Layouts = new List<string>();
+    private IEnumerable<string> selectedLayout = new List<string>();
+    public IEnumerable<string> SelectedLayout {
+        get { return selectedLayout; }
+        set {
+            selectedLayout = value;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+    public DxDataGrid<WeatherForecast>? MyDataGrid;
+    protected override async Task OnInitializedAsync() {
+        Layouts = CurrentLayout.GetKeyList();
+        Data = await ForecastService.GetForecastAsync(DateTime.Today);
+    }
+    void OnLayoutChanged(IDataGridLayout e) {
+        CurrentLayout.UpdateCurrentLayout(e.SaveLayout());
+    }
+    void OnLayoutRestoring(IDataGridLayout e) {
+        if (!string.IsNullOrEmpty(CurrentLayout.GetCurrentLayout()))
+            e.LoadLayout(CurrentLayout.GetCurrentLayout());
+    }
+    async void SaveLayout() {
+        int newLayoutKey = -1;
+        if (Layouts.Count() > 0)
+            newLayoutKey = Convert.ToInt32(Layouts.ToList()[Layouts.Count() - 1]) + 1;
+        else
+            newLayoutKey = 0;
+        CurrentLayout.AddLayout(MyDataGrid.SaveLayout(), newLayoutKey.ToString());
+        Layouts = CurrentLayout.GetKeyList();
+        await InvokeAsync(StateHasChanged);
+    }
+    void LoadLayout() {
+        string selectedLayout = SelectedLayout.ToList()[0];
+        string? layout = CurrentLayout.GetLayoutByKey(selectedLayout);
+        if (!string.IsNullOrEmpty(layout))
+            MyDataGrid.LoadLayout(layout);
+    }
+    async void RemoveLayout() {
+        string selectedLayout = SelectedLayout.ToList()[0];
+        CurrentLayout.RemoveLayout(selectedLayout);
+        Layouts = CurrentLayout.GetKeyList();
+        SelectedLayout = new List<string>();
+        await InvokeAsync(StateHasChanged);
+    }
+}
