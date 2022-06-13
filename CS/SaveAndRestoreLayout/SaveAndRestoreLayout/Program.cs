@@ -1,4 +1,4 @@
-using SaveRestoreDataGridLayout.Data;
+using SaveAndRestoreLayout.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -14,8 +14,6 @@ builder.Services.AddSingleton<UserLayoutManager>();
 builder.Services.Configure<DevExpress.Blazor.Configuration.GlobalOptions>(options => {
     options.BootstrapVersion = DevExpress.Blazor.BootstrapVersion.v5;
 });
-builder.WebHost.UseWebRoot("wwwroot");
-builder.WebHost.UseStaticWebAssets();
 
 var app = builder.Build();
 

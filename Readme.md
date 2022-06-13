@@ -10,20 +10,30 @@
 * [UserLayoutManager.cs](./CS/SaveRestoreDataGridLayout/Data/UserLayoutManager.cs)
 <!-- default file list end -->
 
-### Blazor Data Grid - How to save/load a grid's layout information
+ Grid for Blazor - Save and load layout information
 
-The Data Grid was moved to maintenance support mode. No new features/capabilities will be added to this component. We recommend that you [migrate](https://docs.devexpress.com/Blazor/403162/grid/migrate-from-data-grid-to-grid) to the [Grid](https://docs.devexpress.com/Blazor/403143/grid) component. 
+This example illustrates how to use the [LayoutAutoSaving][0] and [LayoutAutoLoading][1] events, and the [SaveLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.SaveLayout) and [LoadLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout)) methods to save layout information to storage. This information can be restored and applied to the DxGrid component. 
 
-This example illustrates how to use the [LayoutChanged][0], [LayoutRestoring][1] events and the [SaveLayout][2] and [LoadLayout][3] methods to save layout information to some storage. After that this information can be restored and applied to DxDataGrid.
+![App sample](images/dxgrid-save-restore-layout.png)
 
-*Note: as this example illustrates a general approach, layout information is stored in the [UserLayoutManager](./CS/SaveRestoreDataGridLayout/Data/UserLayoutManager.cs) singleton service. This service doesn't identify the current end user.*
+This example also illustrates the capability of the [GridPersistentLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout)) class to modify the saved layout.
 
-The [Index.razor](./CS/SaveRestoreDataGridLayout/Pages/Index.razor) page contains two DxDataGrids.
+The [Grid.razor](./SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/Grid.razor) page contains two DxGrid components:
 
-* The first grid handles the [LayoutChanged][0] and [LayoutRestoring][1] events. The current layout information is stored in the singleton service and is restored from this service inside these event handlers. So end-user modifications (paging/sorting/grouping/filtering) will be restored automatically after a page reload.
-* The second grid saves and loads layout information using external buttons where the [SaveLayout][2] and [LoadLayout][3] methods are called. Click the "Save current layout" button to save the current layout information. The corresponding item will be created in the external list box. Then select any item in this list box and click the "Load layout" button to load the corresponding layout information.
+* The first Grid handles the **LayoutAutoSaving** and **LayoutAutoLoading** events. The singleton service stores the current layout information and restores it in event handlers. User modifications (paging, sorting, grouping, and filtering) are restored automatically after a page reload. In the LayoutAutoLoading event, the group index is excluded from the list of saved column layout settings.
 
-[0]: https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxDataGrid-1.LayoutChanged
-[1]: https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxDataGrid-1.LayoutRestoring
-[2]: https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxDataGrid-1.SaveLayout
-[3]: https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxDataGrid-1.LoadLayout(System.String)
+* The second Grid saves and loads layout information on button clicks that call the [SaveLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.SaveLayout) and [LoadLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout)) methods. Click the **Save current layout** button to save the current layout information. When the Grid's layout is saved, the column's sort index is excluded from the list of saved column layout settings. The corresponding layout item appears in the external List Box. Select any item in editor box and click the **Load layout** button to load layout information. 
+
+This example illustrates a general approach: layout information stored in the [UserLayoutManager.cs](./SaveAndRestoreLayout/SaveAndRestoreLayout/Data/UserLayoutManager.cs) singleton service does not identify the current user.
+
+
+## Files to Look At
+
+- [Grid.razor](./SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/Grid.razor)
+- [UserLayoutManager.cs](./SaveAndRestoreLayout/SaveAndRestoreLayout/Data/UserLayoutManager.cs) 
+
+## Documentation
+
+* [GridPersistentLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout))
+* [SaveLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.SaveLayout)
+* [LoadLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout))

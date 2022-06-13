@@ -1,4 +1,4 @@
-﻿namespace SaveRestoreDataGridLayout.Data {
+﻿namespace SaveAndRestoreLayout.Data {
     public class UserLayoutManager {
         protected string CurrentLayout { get; set; } = string.Empty;
         readonly Dictionary<string, string> _layoutsDictionary = new Dictionary<string, string>();
