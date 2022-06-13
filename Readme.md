@@ -4,13 +4,8 @@
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
 <!-- default file list -->
-*Files to look at*:
 
-* [Index.razor](./CS/SaveRestoreDataGridLayout/Pages/Index.razor)
-* [UserLayoutManager.cs](./CS/SaveRestoreDataGridLayout/Data/UserLayoutManager.cs)
-<!-- default file list end -->
-
- Grid for Blazor - Save and load layout information
+# Grid for Blazor - Save and load layout information
 
 This example illustrates how to use the [LayoutAutoSaving][0] and [LayoutAutoLoading][1] events, and the [SaveLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.SaveLayout) and [LoadLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout)) methods to save layout information to storage. This information can be restored and applied to the DxGrid component. 
 
