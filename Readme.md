@@ -24,8 +24,8 @@ This example illustrates a general approach: layout information stored in the [U
 
 ## Files to Look At
 
-- [Grid.razor](./SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/Grid.razor)
-- [UserLayoutManager.cs](./SaveAndRestoreLayout/SaveAndRestoreLayout/Data/UserLayoutManager.cs) 
+- [Grid.razor](./SC/SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/Grid.razor)
+- [UserLayoutManager.cs](./SC/SaveAndRestoreLayout/SaveAndRestoreLayout/Data/UserLayoutManager.cs) 
 
 ## Documentation
 
