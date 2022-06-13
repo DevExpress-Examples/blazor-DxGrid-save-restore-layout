@@ -25,14 +25,8 @@
         </Columns>
         <Items>
             <DxGridLayoutItem Area="header" CssClass="layout-item">
-                <Template>
-                    <Header @bind-ToggleOn="@IsSidebarExpanded" />
-                </Template>
             </DxGridLayoutItem>
             <DxGridLayoutItem Area="sidebar" CssClass="layout-item">
-                <Template>
-                    <NavMenu StateCssClass="@NavMenuCssClass" />
-                </Template>
             </DxGridLayoutItem>
             <DxGridLayoutItem Area="content" CssClass="content px-4 layout-item">
                 <Template>
