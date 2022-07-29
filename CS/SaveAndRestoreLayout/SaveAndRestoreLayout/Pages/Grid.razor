@@ -107,13 +107,7 @@ else {
         e.Layout = await LoadLayoutFromLocalStorageAsync();
     }
     async Task Grid_LayoutAutoSaving(GridPersistentLayoutEventArgs e) {
-        //Excludes the GroupIndex
-        var layout = e.Layout with {
-                Columns = new GridPersistentLayoutCollection<GridPersistentLayoutColumn>(
-                    e.Layout.Columns.Select(i => i with { GroupIndex = null })
-                )
-        };
-        await SaveLayoutToLocalStorageAsync(layout);
+        await SaveLayoutToLocalStorageAsync(e.Layout);
     }
     async Task<GridPersistentLayout> LoadLayoutFromLocalStorageAsync() {
         try {
