@@ -20,8 +20,6 @@ else {
             <div class="col-10">
                 <p>Save layout automatically<button class="btn btn-light" @onclick="@RefreshPage">Reload page</button></p>
 
-                <p><b>For this grid, a column's GroupIndex parameter is excluded from the list of saved column layout settings. Please see the code in the LayoutAutoSaving event for more information.</b></p>
-
                 <button class="btn btn-light show-column-chooser-button1" @onclick="@ShowColumnChooser_Click1">Show column chooser</button>
                 <DxGrid Data="@forecasts"
                     @ref=GridRef1
@@ -46,7 +44,6 @@ else {
         <div class="row p-2">
             <div class="col-10">
                 <p>Save layout by a button <button class="btn btn-light" @onclick="@RefreshPage">Reload page</button></p>
-                <p><b>For this grid, a column's SortIndex parameter is excluded from the list of saved column layout settings. Please see the code in the SaveLayout method for more information.</b></p>
                 <button class="btn btn-light show-column-chooser-button2" @onclick="@ShowColumnChooser_Click2">Show column chooser</button>
                 <DxGrid Data="@forecasts"
                     @ref=GridRef2
