@@ -83,7 +83,7 @@ else {
     WeatherForecast[] Forecasts { get; set; }
     IGrid GridRef1 { get; set; }
     IGrid GridRef2 { get; set; }
-    ObservableCollection<UserLayout> Layouts { get; set; }
+    ObservableCollection<UserLayout> Layouts { get; set; } = new ObservableCollection<UserLayout>();
     UserLayout SelectedLayout { get; set; }
 
     protected override async Task OnInitializedAsync() {
