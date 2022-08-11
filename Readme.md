@@ -7,28 +7,22 @@
 
 # Grid for Blazor - Save and load layout information
 
-This example illustrates how to use the [LayoutAutoSaving][0] and [LayoutAutoLoading][1] events, and the [SaveLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.SaveLayout) and [LoadLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout)) methods to save layout information to storage. This information can be restored and applied to the DxGrid component. 
+The DevExpress [Grid](https://docs.devexpress.com/Blazor/403143/grid) for Blazor allows you to save its layout between application work sessions. This example demonstrates how to save layouts automatically and by API. The [Grid.razor](./SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/Grid.razor) page contains two tab pages with Grid components:
+
+* The first Grid handles the [LayoutAutoSaving][https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoSaving] and [LayoutAutoLoading][https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoLoading] events. The current layout information is saved to [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage). User modifications (paging, sorting, grouping, and filtering) are restored automatically after a page reload.
+
+* The second Grid saves and loads layout information on button clicks that call the [SaveLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.SaveLayout) and [LoadLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout)) methods. The **Save current layout** button click saves the current layout information. The corresponding layout item appears in the external List Box. Users can select any item in the editor box and click the **Load layout** button to load layout information. 
 
 ![App sample](images/dxgrid-save-restore-layout.png)
-
-This example also illustrates the capability of the [GridPersistentLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout)) class to modify the saved layout.
-
-The [Grid.razor](./SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/Grid.razor) page contains two DxGrid components:
-
-* The first Grid handles the **LayoutAutoSaving** and **LayoutAutoLoading** events. The singleton service stores the current layout information and restores it in event handlers. User modifications (paging, sorting, grouping, and filtering) are restored automatically after a page reload. In the LayoutAutoLoading event, the group index is excluded from the list of saved column layout settings.
-
-* The second Grid saves and loads layout information on button clicks that call the [SaveLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.SaveLayout) and [LoadLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout)) methods. Click the **Save current layout** button to save the current layout information. When the Grid's layout is saved, the column's sort index is excluded from the list of saved column layout settings. The corresponding layout item appears in the external List Box. Select any item in editor box and click the **Load layout** button to load layout information. 
-
-This example illustrates a general approach: layout information stored in the [UserLayoutManager.cs](./SaveAndRestoreLayout/SaveAndRestoreLayout/Data/UserLayoutManager.cs) singleton service does not identify the current user.
-
 
 ## Files to Look At
 
 - [Grid.razor](./CS/SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/Grid.razor)
-- [UserLayoutManager.cs](./CS/SaveAndRestoreLayout/SaveAndRestoreLayout/Data/UserLayoutManager.cs) 
 
 ## Documentation
 
 * [GridPersistentLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout))
+* [LayoutAutoSaving][https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoSaving]
+* [LayoutAutoLoading][https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoLoading]
 * [SaveLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.SaveLayout)
 * [LoadLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout))

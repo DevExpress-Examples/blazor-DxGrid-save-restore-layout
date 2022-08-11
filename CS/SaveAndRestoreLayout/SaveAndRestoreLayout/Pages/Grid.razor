@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 
 @using System.Text.Json
 @using SaveAndRestoreLayout.Data
@@ -6,169 +6,163 @@
 @inject NavigationManager uriHelper;
 @inject WeatherForecastService ForecastService
 @inject IJSRuntime JSRuntime
-@inject UserLayoutManager CurrentLayout
 
 
-@if (forecasts == null)
-{
+@if (Forecasts == null) {
     <p><em>Loading...</em></p>
 }
 else {
-    <div class="container">
-        <div class="row p-2">
-            <h2>How to save and restore the grid's layout</h2>
-            <div class="col-10">
-                <p>Save layout automatically<button class="btn btn-light" @onclick="@RefreshPage">Reload page</button></p>
+    <h2>How to save and restore the grid's layout</h2>
+    <DxFormLayout>
+        <DxFormLayoutTabPages>
+            <DxFormLayoutTabPage Caption="Save layout automatically">
+                <div>
+                    <DxButton Click="ReloadPage_Click" Text="Reload page" />
+                    <DxButton Click="ShowColumnChooser_Click1" Text="Show column chooser" CssClass="show-column-chooser-button1" />
 
-                <button class="btn btn-light show-column-chooser-button1" @onclick="@ShowColumnChooser_Click1">Show column chooser</button>
-                <DxGrid Data="@forecasts"
-                    @ref=GridRef1
-                    CssClass="mw-1100"
-                    PageSizeSelectorVisible="true"
-                    PageSizeSelectorAllRowsItemVisible="true"
-                    ColumnResizeMode="GridColumnResizeMode.NextColumn"
-                    ShowGroupPanel="true" ShowFilterRow="true"
-                    LayoutAutoLoading=Grid_LayoutAutoLoading
-                    LayoutAutoSaving=Grid_LayoutAutoSaving>
-                    <Columns>
-                        <DxGridDataColumn Caption="Date" FieldName="Date" />
-                        <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" />
-                        <DxGridDataColumn Caption="Summary" FieldName="Summary" />
-                    </Columns>
-                </DxGrid>
-            </div>
-            <div class="col-2">
-                <button class="btn btn-light" @onclick="@(async () => { await ResetLayoutButton_ClickAsync(); })">Reset layout</button>
-            </div>
-        </div>
-        <div class="row p-2">
-            <div class="col-10">
-                <p>Save layout by a button <button class="btn btn-light" @onclick="@RefreshPage">Reload page</button></p>
-                <button class="btn btn-light show-column-chooser-button2" @onclick="@ShowColumnChooser_Click2">Show column chooser</button>
-                <DxGrid Data="@forecasts"
-                    @ref=GridRef2
-                    CssClass="mw-1100"
-                    PageSizeSelectorVisible="true"
-                    PageSizeSelectorAllRowsItemVisible="true"
-                    ColumnResizeMode="GridColumnResizeMode.NextColumn"
-                    ShowGroupPanel="true" ShowFilterRow="true">
-                    <Columns>
-                        <DxGridDataColumn Caption="Date" FieldName="Date" />
-                        <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" />
-                        <DxGridDataColumn Caption="Summary" FieldName="Summary" />
-                    </Columns>
-                </DxGrid>
-
-            </div>
-            <div class="col-2">
-                Available layouts:
-                <DxListBox TData="string" TValue="string" Data="@Layouts" @bind-SelectedItems="@SelectedLayout" SelectionMode="ListBoxSelectionMode.Single">
-                </DxListBox>
-                <div class="p-2">
-                    <button class="btn btn-light" @onclick="SaveLayout">Save current layout</button>
+                    <DxGrid Data="@Forecasts"
+                        @ref=GridRef1
+                        CssClass="mw-1100"
+                        PageSizeSelectorVisible="true"
+                        PageSizeSelectorAllRowsItemVisible="true"
+                        ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                        ShowGroupPanel="true" ShowFilterRow="true"
+                        LayoutAutoLoading=Grid_LayoutAutoLoading
+                        LayoutAutoSaving=Grid_LayoutAutoSaving>
+                        <Columns>
+                            <DxGridDataColumn Caption="Date" FieldName="Date" />
+                            <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" />
+                            <DxGridDataColumn Caption="Summary" FieldName="Summary" />
+                        </Columns>
+                    </DxGrid>
                 </div>
-                @if (SelectedLayout.Count() > 0) {
-                    <div class="p-2">
-                        <button class="btn btn-light" @onclick="LoadLayout">Load layout</button>
-                        <button class="btn btn-light" @onclick="RemoveLayout">Remove layout</button>
+                <div>
+                    <DxButton Click="ResetLayoutButton_Click" Text="Reset layout" />
+                </div>
+            </DxFormLayoutTabPage>
+            <DxFormLayoutTabPage Caption="Save layout by API">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-8">
+                            <DxButton Click="ShowColumnChooser_Click2" Text="Show column chooser" CssClass="show-column-chooser-button2" />
+                            <DxGrid Data="@Forecasts"
+                                @ref=GridRef2
+                                CssClass="mw-1100"
+                                PageSizeSelectorVisible="true"
+                                PageSizeSelectorAllRowsItemVisible="true"
+                                ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                                ShowGroupPanel="true" ShowFilterRow="true">
+                                <Columns>
+                                    <DxGridDataColumn Caption="Date" FieldName="Date" />
+                                    <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" />
+                                    <DxGridDataColumn Caption="Summary" FieldName="Summary" />
+                                </Columns>
+                            </DxGrid>
+
+                        </div>
+                        <div class="col-4">
+                            Available layouts:
+                            <DxListBox Data="@Layouts" TextFieldName="LayoutKey" @bind-Value="@SelectedLayout" />
+                            <DxButton Click="SaveLayout_Click" Text="Save current layout" />
+                            @if (SelectedLayout != null) {
+                                <DxButton Click="LoadLayout_Click" Text="Load layout" />
+                                <DxButton Click="RemoveLayout_Click" Text="Remove layout" />
+                            }
+                        </div>
                     </div>
-                }
-            </div>
-        </div>
-    </div>
+                </div>
+            </DxFormLayoutTabPage>
+        </DxFormLayoutTabPages>
+    </DxFormLayout>
 }
 
 
 @code {
-    #region Variables
-    private WeatherForecast[]? forecasts;
-    IGrid GridRef1;
-    IGrid GridRef2;
-    string LocalStorageKey = "sampleKey";
-    private ObservableCollection<string> Layouts = new ObservableCollection<string>();
-    private IEnumerable<string> selectedLayout = new List<string>();
-    public IEnumerable<string> SelectedLayout {
-        get { return selectedLayout; }
-        set {
-            selectedLayout = value;
-            InvokeAsync(StateHasChanged);
-        }
-    }
-    #endregion
+    const string LocalStorageAutomaticSaveKey = "sampleKey";
+    const string LocalStorageItemsKey = "sampleItemsKey";
+    WeatherForecast[] Forecasts { get; set; }
+    IGrid GridRef1 { get; set; }
+    IGrid GridRef2 { get; set; }
+    ObservableCollection<UserLayout> Layouts { get; set; }
+    UserLayout SelectedLayout { get; set; }
 
     protected override async Task OnInitializedAsync() {
-        Layouts = new ObservableCollection<string>(CurrentLayout.GetKeyList());
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        Forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        var json = await GetLocalStorageItemAsync(LocalStorageItemsKey);
+        if (!string.IsNullOrEmpty(json))
+            Layouts = JsonSerializer.Deserialize<ObservableCollection<UserLayout>>(json);
     }
+
     async Task Grid_LayoutAutoLoading(GridPersistentLayoutEventArgs e) {
-        e.Layout = await LoadLayoutFromLocalStorageAsync();
+        var json = await GetLocalStorageItemAsync(LocalStorageAutomaticSaveKey);
+        if (!string.IsNullOrEmpty(json))
+            e.Layout = JsonSerializer.Deserialize<GridPersistentLayout>(json);
     }
     async Task Grid_LayoutAutoSaving(GridPersistentLayoutEventArgs e) {
-        await SaveLayoutToLocalStorageAsync(e.Layout);
+        await SetLocalStorageItemAsync(LocalStorageAutomaticSaveKey, JsonSerializer.Serialize(e.Layout));
     }
-    async Task<GridPersistentLayout> LoadLayoutFromLocalStorageAsync() {
-        try {
-            var json = await JSRuntime.InvokeAsync<string>("localStorage.getItem", LocalStorageKey);
-            return JsonSerializer.Deserialize<GridPersistentLayout>(json);
-        } catch {
-            // Mute exceptions
-            return null;
-        }
-    }
-    async Task SaveLayoutToLocalStorageAsync(GridPersistentLayout layout) {
-        try {
-            var json = JsonSerializer.Serialize(layout);
-            await JSRuntime.InvokeVoidAsync("localStorage.setItem", LocalStorageKey, json);
-        } catch {
-            // Mute exceptions
-        }
-    }
-    async Task RemoveLayoutFromLocalStorageAsync() {
-        try {
-            await JSRuntime.InvokeVoidAsync("localStorage.removeItem", LocalStorageKey);
-        } catch {
-            // Mute exceptions
-        }
-    }
-    async Task ResetLayoutButton_ClickAsync() {
-        await RemoveLayoutFromLocalStorageAsync();
-        await JSRuntime.InvokeVoidAsync("location.reload");
-    }
-    async void SaveLayout() {
-        string newLayoutKey = "";
-        newLayoutKey = "Layout " + DateTime.Now.ToString();
-        //Excludes the column's SortIndex
-        var layout = GridRef2.SaveLayout()  with {
-                Columns = new GridPersistentLayoutCollection<GridPersistentLayoutColumn>(
-                    GridRef2.SaveLayout().Columns.Select(i => i with { SortIndex = null })
-                )
-        };
-        CurrentLayout.AddLayout(JsonSerializer.Serialize(layout), newLayoutKey.ToString());
-        Layouts = new ObservableCollection<string>(CurrentLayout.GetKeyList());
-        await InvokeAsync(StateHasChanged);
-    }
-    void LoadLayout() {
-        string selectedLayout = SelectedLayout.ToList()[0];
-        string layout = CurrentLayout.GetLayoutByKey(selectedLayout);
-        if (!string.IsNullOrEmpty(layout)) {
-            var json = JsonSerializer.Deserialize<GridPersistentLayout>(layout);
-            GridRef2.LoadLayout(json);
-        }
-    }
-    async void RemoveLayout() {
-        string selectedLayout = SelectedLayout.ToList()[0];
-        CurrentLayout.RemoveLayout(selectedLayout);
-        Layouts = new ObservableCollection<string>(CurrentLayout.GetKeyList());
-        SelectedLayout = new List<string>();
-        await InvokeAsync(StateHasChanged);
-    }
-    void RefreshPage() {
-       uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+
+    async Task ResetLayoutButton_Click() {
+        await RemoveLocalStorageItemAsync(LocalStorageAutomaticSaveKey);
+        await RefreshPageAsync();
+    }    
+    async Task ReloadPage_Click() {
+        await RefreshPageAsync();
     }
     void ShowColumnChooser_Click1() {
         GridRef1.ShowColumnChooser(".show-column-chooser-button1");
     }
+
     void ShowColumnChooser_Click2() {
         GridRef2.ShowColumnChooser(".show-column-chooser-button2");
+    }
+    async void SaveLayout_Click() {
+        string newLayoutKey = "";
+        newLayoutKey = "Layout " + DateTime.Now.ToString();
+        var layout = GridRef2.SaveLayout();
+        Layouts.Add(new UserLayout() { LayoutKey = newLayoutKey, Layout = layout });
+        await SetLocalStorageItemAsync(LocalStorageItemsKey, JsonSerializer.Serialize(Layouts));
+    }
+    void LoadLayout_Click() {
+        var selectedLayout = SelectedLayout;
+        GridPersistentLayout? layout = selectedLayout?.Layout;
+        if (layout != null) {
+            GridRef2.LoadLayout(layout);
+        }
+    }
+    async void RemoveLayout_Click() {
+        var selectedLayout = SelectedLayout;
+        Layouts.Remove(selectedLayout);
+        await SetLocalStorageItemAsync(LocalStorageItemsKey, JsonSerializer.Serialize(Layouts));
+        SelectedLayout = null;
+    }
+
+    async Task RefreshPageAsync() {
+        await JSRuntime.InvokeVoidAsync("location.reload");
+    }
+    async Task<string> GetLocalStorageItemAsync(string key) {
+        try {
+            return await JSRuntime.InvokeAsync<string>("localStorage.getItem", key);
+        }
+        catch {
+            // Mute exceptions
+            return "";
+        }
+    }
+    async Task SetLocalStorageItemAsync(string key, string value) {
+        try {
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", key, value);
+        }
+        catch {
+            // Mute exceptions
+        }
+    }
+    async Task RemoveLocalStorageItemAsync(string key) {
+        try {
+            await JSRuntime.InvokeVoidAsync("localStorage.removeItem", key);
+        }
+        catch {
+            // Mute exceptions
+        }
     }
 }

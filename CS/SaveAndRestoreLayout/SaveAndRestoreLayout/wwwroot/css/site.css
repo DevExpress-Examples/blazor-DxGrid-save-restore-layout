@@ -33,9 +33,15 @@ html, body {
     z-index: 1000;
 }
 
-#blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+.btn {
+    margin-right: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+    margin-top: 0.5rem !important;
 }
