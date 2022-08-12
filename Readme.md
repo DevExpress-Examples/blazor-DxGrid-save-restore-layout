@@ -22,7 +22,7 @@ The DevExpress [Grid](https://docs.devexpress.com/Blazor/403143/grid) for Blazor
 ## Documentation
 
 * [GridPersistentLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout))
-* [LayoutAutoSaving][https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoSaving]
-* [LayoutAutoLoading][https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoLoading]
+* [LayoutAutoSaving](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoSaving)
+* [LayoutAutoLoading](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoLoading)
 * [SaveLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.SaveLayout)
 * [LoadLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout))
