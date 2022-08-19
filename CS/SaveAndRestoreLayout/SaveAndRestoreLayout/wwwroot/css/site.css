@@ -40,8 +40,11 @@ html, body {
         top: 0.5rem;
     }
 
-.btn {
+.button-margins {
     margin-right: 0.5rem !important;
-    margin-bottom: 0.5rem !important;
     margin-top: 0.5rem !important;
+}
+.vertical-paddigns {
+    padding-top: 12px;
+    padding-bottom: 12px;
 }
