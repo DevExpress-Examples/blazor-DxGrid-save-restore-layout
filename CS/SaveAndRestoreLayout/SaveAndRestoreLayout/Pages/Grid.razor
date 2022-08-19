@@ -1,4 +1,4 @@
-@page "/"
+﻿@page "/"
 
 @using System.Text.Json
 @using SaveAndRestoreLayout.Data
@@ -16,61 +16,61 @@ else {
     <DxFormLayout>
         <DxFormLayoutTabPages>
             <DxFormLayoutTabPage Caption="Save layout automatically">
-                <div>
-                    <DxButton Click="ReloadPage_Click" Text="Reload page" />
-                    <DxButton Click="ShowColumnChooser_Click1" Text="Show column chooser" CssClass="show-column-chooser-button1" />
-
-                    <DxGrid Data="@Forecasts"
-                        @ref=GridRef1
-                        CssClass="mw-1100"
-                        PageSizeSelectorVisible="true"
-                        PageSizeSelectorAllRowsItemVisible="true"
-                        ColumnResizeMode="GridColumnResizeMode.NextColumn"
-                        ShowGroupPanel="true" ShowFilterRow="true"
-                        LayoutAutoLoading=Grid_LayoutAutoLoading
-                        LayoutAutoSaving=Grid_LayoutAutoSaving>
-                        <Columns>
-                            <DxGridDataColumn Caption="Date" FieldName="Date" />
-                            <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" />
-                            <DxGridDataColumn Caption="Summary" FieldName="Summary" />
-                        </Columns>
-                    </DxGrid>
-                </div>
-                <div>
-                    <DxButton Click="ResetLayoutButton_Click" Text="Reset layout" />
-                </div>
+                <DxFormLayout>
+                    <DxFormLayoutItem ColSpanMd="12">
+                        <DxButton Click="ReloadPage_Click" Text="Reload page" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
+                        <DxButton Click="ShowColumnChooser_Click1" Text="Show column chooser" RenderStyle="ButtonRenderStyle.Secondary" CssClass="show-column-chooser-button1 button-margins" />
+                        <DxButton Click="ResetLayoutButton_Click" RenderStyle="ButtonRenderStyle.Secondary" Text="Reset layout" CssClass="button-margins" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanMd="12" CssClass="vertical-paddigns">
+                        <DxGrid Data="@Forecasts"
+                            @ref=GridRef1
+                            CssClass="mw-1100"
+                            PageSizeSelectorVisible="true"
+                            PageSizeSelectorAllRowsItemVisible="true"
+                            ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                            ShowGroupPanel="true" ShowFilterRow="true"
+                            LayoutAutoLoading=Grid_LayoutAutoLoading
+                            LayoutAutoSaving=Grid_LayoutAutoSaving>
+                            <Columns>
+                                <DxGridDataColumn Caption="Date" FieldName="Date" />
+                                <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" />
+                                <DxGridDataColumn Caption="Summary" FieldName="Summary" />
+                            </Columns>
+                        </DxGrid>
+                    </DxFormLayoutItem>
+                </DxFormLayout>
             </DxFormLayoutTabPage>
             <DxFormLayoutTabPage Caption="Save layout by API">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-8">
-                            <DxButton Click="ShowColumnChooser_Click2" Text="Show column chooser" CssClass="show-column-chooser-button2" />
-                            <DxGrid Data="@Forecasts"
-                                @ref=GridRef2
-                                CssClass="mw-1100"
-                                PageSizeSelectorVisible="true"
-                                PageSizeSelectorAllRowsItemVisible="true"
-                                ColumnResizeMode="GridColumnResizeMode.NextColumn"
-                                ShowGroupPanel="true" ShowFilterRow="true">
-                                <Columns>
-                                    <DxGridDataColumn Caption="Date" FieldName="Date" />
-                                    <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" />
-                                    <DxGridDataColumn Caption="Summary" FieldName="Summary" />
-                                </Columns>
-                            </DxGrid>
-
-                        </div>
-                        <div class="col-4">
-                            Available layouts:
-                            <DxListBox Data="@Layouts" TextFieldName="LayoutKey" @bind-Value="@SelectedLayout" />
-                            <DxButton Click="SaveLayout_Click" Text="Save current layout" />
-                            @if (SelectedLayout != null) {
-                                <DxButton Click="LoadLayout_Click" Text="Load layout" />
-                                <DxButton Click="RemoveLayout_Click" Text="Remove layout" />
-                            }
-                        </div>
-                    </div>
-                </div>
+                <DxFormLayout>
+                    <DxFormLayoutItem ColSpanMd="8">
+                        <DxButton Click="ShowColumnChooser_Click2" Text="Show column chooser" RenderStyle="ButtonRenderStyle.Secondary" CssClass="show-column-chooser-button2 button-margins" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanMd="4"></DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanMd="8" CssClass="vertical-paddigns">
+                        <DxGrid Data="@Forecasts"
+                            @ref=GridRef2
+                            CssClass="w-100"
+                            PageSizeSelectorVisible="true"
+                            PageSizeSelectorAllRowsItemVisible="true"
+                            ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                            ShowGroupPanel="true" ShowFilterRow="true">
+                            <Columns>
+                                <DxGridDataColumn Caption="Date" FieldName="Date" />
+                                <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" Width="120px"/>
+                                <DxGridDataColumn Caption="Summary" FieldName="Summary" />
+                            </Columns>
+                        </DxGrid>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanMd="4" CssClass="vertical-paddigns">
+                        <DxListBox Data="@Layouts" TextFieldName="LayoutKey" @bind-Value="@SelectedLayout" />
+                        <DxButton Click="SaveLayout_Click" Text="Save current layout" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
+                        @if (SelectedLayout != null) {
+                            <DxButton Click="LoadLayout_Click" Text="Load layout" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
+                            <DxButton Click="RemoveLayout_Click" Text="Remove layout" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
+                        }
+                    </DxFormLayoutItem>
+                </DxFormLayout>
             </DxFormLayoutTabPage>
         </DxFormLayoutTabPages>
     </DxFormLayout>
@@ -91,6 +91,7 @@ else {
         var json = await GetLocalStorageItemAsync(LocalStorageItemsKey);
         if (!string.IsNullOrEmpty(json))
             Layouts = JsonSerializer.Deserialize<ObservableCollection<UserLayout>>(json);
+
     }
 
     async Task Grid_LayoutAutoLoading(GridPersistentLayoutEventArgs e) {
@@ -105,7 +106,7 @@ else {
     async Task ResetLayoutButton_Click() {
         await RemoveLocalStorageItemAsync(LocalStorageAutomaticSaveKey);
         await RefreshPageAsync();
-    }    
+    }
     async Task ReloadPage_Click() {
         await RefreshPageAsync();
     }
