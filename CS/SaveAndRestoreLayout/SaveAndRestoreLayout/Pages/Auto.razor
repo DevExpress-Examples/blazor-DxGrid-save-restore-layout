@@ -1,0 +1,106 @@
+﻿@page "/"
+
+@using System.Text.Json
+@using SaveAndRestoreLayout.Data
+@using System.Collections.ObjectModel
+@inject NavigationManager uriHelper;
+@inject WeatherForecastService ForecastService
+@inject IJSRuntime JSRuntime
+
+@if (Forecasts == null) {
+    <p><em>Loading...</em></p>
+}
+else {
+    <h2>How to save and restore the grid's layout automatically</h2>    
+    <DxFormLayout>
+        <DxFormLayoutItem ColSpanMd="12">
+            <DxButton Click="ReloadPage_Click" Text="Reload page" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
+            <DxButton Click="ShowColumnChooser_Click" Text="Show column chooser" RenderStyle="ButtonRenderStyle.Secondary" CssClass="show-column-chooser-button1 button-margins" />
+            <DxButton Click="ResetLayoutButton_Click" RenderStyle="ButtonRenderStyle.Secondary" Text="Reset layout" CssClass="button-margins" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="12" CssClass="vertical-paddigns">
+            <DxGrid Data="@Forecasts"
+                    @ref=GridRef
+                    CssClass="mw-1100"
+                    PageSizeSelectorVisible="true"
+                    PageSizeSelectorAllRowsItemVisible="true"
+                    ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                    ShowGroupPanel="true" ShowFilterRow="true"
+                    LayoutAutoLoading=Grid_LayoutAutoLoading
+                    LayoutAutoSaving=Grid_LayoutAutoSaving>
+                <Columns>
+                    <DxGridDataColumn Caption="Date" FieldName="Date" />
+                    <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" />
+                    <DxGridDataColumn Caption="Summary" FieldName="Summary" />
+                </Columns>
+            </DxGrid>
+        </DxFormLayoutItem>
+    </DxFormLayout>            
+}
+
+@code {
+    const string LocalStorageAutomaticSaveKey = "sampleKey";
+    const string LocalStorageItemsKey = "sampleItemsKey";
+    WeatherForecast[] Forecasts { get; set; }
+    IGrid GridRef { get; set; }
+    ObservableCollection<UserLayout> Layouts { get; set; } = new ObservableCollection<UserLayout>();
+    UserLayout SelectedLayout { get; set; }
+
+    protected override async Task OnInitializedAsync() {
+        Forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        var json = await GetLocalStorageItemAsync(LocalStorageItemsKey);
+        if (!string.IsNullOrEmpty(json))
+            Layouts = JsonSerializer.Deserialize<ObservableCollection<UserLayout>>(json);
+    }
+    async Task Grid_LayoutAutoLoading(GridPersistentLayoutEventArgs e) {
+        var json = await GetLocalStorageItemAsync(LocalStorageAutomaticSaveKey);
+        if (!string.IsNullOrEmpty(json))
+            e.Layout = JsonSerializer.Deserialize<GridPersistentLayout>(json);
+    }
+    async Task Grid_LayoutAutoSaving(GridPersistentLayoutEventArgs e) {
+        await SetLocalStorageItemAsync(LocalStorageAutomaticSaveKey, JsonSerializer.Serialize(e.Layout));
+    }
+    async Task ResetLayoutButton_Click() {
+        await RemoveLocalStorageItemAsync(LocalStorageAutomaticSaveKey);
+        await RefreshPageAsync();
+    }
+    async Task ReloadPage_Click() {
+        await RefreshPageAsync();
+    }
+    void ShowColumnChooser_Click() {
+        GridRef.ShowColumnChooser(".show-column-chooser-button1");
+    }
+    async void RemoveLayout_Click() {
+        Layouts.Remove(SelectedLayout);
+        await SetLocalStorageItemAsync(LocalStorageItemsKey, JsonSerializer.Serialize(Layouts));
+        SelectedLayout = null;
+    }
+    async Task RefreshPageAsync() {
+        await JSRuntime.InvokeVoidAsync("location.reload");
+    }
+    async Task<string> GetLocalStorageItemAsync(string key) {
+        try {
+            return await JSRuntime.InvokeAsync<string>("localStorage.getItem", key);
+        }
+        catch {
+            // Mute exceptions
+            return "";
+        }
+    }
+    async Task SetLocalStorageItemAsync(string key, string value) {
+        try {
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", key, value);
+        }
+        catch {
+            // Mute exceptions
+        }
+    }
+    async Task RemoveLocalStorageItemAsync(string key) {
+        try {
+            await JSRuntime.InvokeVoidAsync("localStorage.removeItem", key);
+        }
+        catch {
+            // Mute exceptions
+        }
+    }
+}

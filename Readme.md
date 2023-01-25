@@ -3,21 +3,23 @@
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T826240)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
-<!-- default file list -->
 
 # Grid for Blazor - Save and load layout information
 
-The DevExpress Blazor [Grid](https://docs.devexpress.com/Blazor/403143/grid) allows you to save layout information between app sessions. This example demonstrates how to save layouts automatically and illustrates how to manually use the Grid’s API. The [Grid.razor](./CS/SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/Grid.razor) page contains two tab pages with Grid components:
+The DevExpress Blazor [Grid](https://docs.devexpress.com/Blazor/403143/grid) allows you to save layout information between app sessions. This example demonstrates two different approaches on how to save and restore grid layout:
 
-* The first Grid handles the [LayoutAutoSaving](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoSaving) and [LayoutAutoLoading](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoLoading) events. Current layout information is saved to [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage). User modifications (paging, sorting, grouping, and filtering) are restored automatically once a page reloads.
+* On the [Auto.razor](./CS/SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/Auto.razor) page, the Grid saves the current layout information to the [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) once the layout changes. When the page reloads, the Grid restores the saved layout. To implement this behavior, use the Grid's [LayoutAutoSaving](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoSaving) and [LayoutAutoLoading](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoLoading) events.
 
-* The second Grid saves and loads layout information after a button click. The click calls the Grid's [SaveLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.SaveLayout) and [LoadLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout)) methods. The **Save current layout** button saves current layout information. The corresponding layout item appears in the external List Box. Users can select any item in the editor box and click the **Load layout** button to load layout information. 
+    ![The Auto.razor page](images/save-restore-layout-automatically.png)
 
-![App sample](images/dxgrid-save-restore-layout.png)
+* On the [API.razor](./CS/SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/API.razor) page, the Grid saves its current layout information after a user clicks the **Save current layout** button. The **List Box** on the rigth of the Grid displays all saved layout items. When a user selects an item in the **List Box** and clicks the **Load layout** button, the Grid restores the selected layout. To implement this behavior, use the Grid's [SaveLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.SaveLayout) and [LoadLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LoadLayout(DevExpress.Blazor.GridPersistentLayout)) methods.
+
+    ![The API.razor page](images/save-restore-layout-manually.png)
 
 ## Files to Review
 
-- [Grid.razor](./CS/SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/Grid.razor)
+- [Auto.razor](./CS/SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/Auto.razor)
+- [API.razor](./CS/SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/API.razor)
 
 ## Documentation
 
