@@ -13,10 +13,9 @@
 else {
     <h2>How to save and restore the grid's layout using Grid API</h2>    
     <DxFormLayout>
-        <DxFormLayoutItem ColSpanMd="8">
-            <DxButton Click="ShowColumnChooser_Click" Text="Show column chooser" RenderStyle="ButtonRenderStyle.Secondary" CssClass="show-column-chooser-button2 button-margins" />
+        <DxFormLayoutItem ColSpanMd="12">
+            <DxButton Click="ShowColumnChooserButton_Click" Text="Show column chooser" RenderStyle="ButtonRenderStyle.Secondary" CssClass="show-column-chooser-button button-margins" />
         </DxFormLayoutItem>
-        <DxFormLayoutItem ColSpanMd="4"></DxFormLayoutItem>
         <DxFormLayoutItem ColSpanMd="8" CssClass="vertical-paddigns">
             <DxGrid Data="@Forecasts"
                     @ref=GridRef
@@ -24,7 +23,8 @@ else {
                     PageSizeSelectorVisible="true"
                     PageSizeSelectorAllRowsItemVisible="true"
                     ColumnResizeMode="GridColumnResizeMode.NextColumn"
-                    ShowGroupPanel="true" ShowFilterRow="true">
+                    ShowGroupPanel="true"
+                    ShowFilterRow="true">
                     <Columns>
                         <DxGridDataColumn Caption="Date" FieldName="Date" />
                         <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" Width="120px"/>
@@ -34,11 +34,9 @@ else {
         </DxFormLayoutItem>
         <DxFormLayoutItem ColSpanMd="4" CssClass="vertical-paddigns">
             <DxListBox Data="@Layouts" TextFieldName="LayoutKey" @bind-Value="@SelectedLayout" />
-            <DxButton Click="SaveLayout_Click" Text="Save current layout" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
-             @if (SelectedLayout != null) {
-                 <DxButton Click="LoadLayout_Click" Text="Load layout" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
-                 <DxButton Click="RemoveLayout_Click" Text="Remove layout" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
-             }
+            <DxButton Click="SaveLayoutButton_Click" Text="Save current layout" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
+            <DxButton Click="LoadLayoutButton_Click" Text="Load layout" Enabled="@(SelectedLayout != null)" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
+            <DxButton Click="RemoveLayoutButton_Click" Text="Remove layout" Enabled="@(SelectedLayout != null)" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
         </DxFormLayoutItem>
     </DxFormLayout>
 }
@@ -56,25 +54,23 @@ else {
         if (!string.IsNullOrEmpty(json))
             Layouts = JsonSerializer.Deserialize<ObservableCollection<UserLayout>>(json);
     }
-    void ShowColumnChooser_Click() {
-        GridRef.ShowColumnChooser(".show-column-chooser-button2");
+    void ShowColumnChooserButton_Click() {
+        GridRef.ShowColumnChooser(".show-column-chooser-button");
     }
-    async void SaveLayout_Click() {
-        string newLayoutKey = "Layout " + DateTime.Now.ToString();
-        var layout = GridRef.SaveLayout();
-        Layouts.Add(new UserLayout() { LayoutKey = newLayoutKey, Layout = layout });
+    async void SaveLayoutButton_Click() {
+        Layouts.Add(new UserLayout() { 
+            LayoutKey = "Layout " + DateTime.Now.ToString(), 
+            Layout = GridRef.SaveLayout()
+        });
         await SetLocalStorageItemAsync(LocalStorageItemsKey, JsonSerializer.Serialize(Layouts));
     }
-    void LoadLayout_Click() {
-        GridPersistentLayout? layout = SelectedLayout?.Layout;
-        if (layout != null) {
-            GridRef.LoadLayout(layout);
-        }
+    void LoadLayoutButton_Click() {
+        GridRef.LoadLayout(SelectedLayout.Layout);
     }
-    async void RemoveLayout_Click() {
+    async void RemoveLayoutButton_Click() {
         Layouts.Remove(SelectedLayout);
-        await SetLocalStorageItemAsync(LocalStorageItemsKey, JsonSerializer.Serialize(Layouts));
         SelectedLayout = null;
+        await SetLocalStorageItemAsync(LocalStorageItemsKey, JsonSerializer.Serialize(Layouts));       
     }
     async Task<string> GetLocalStorageItemAsync(string key) {
         try {

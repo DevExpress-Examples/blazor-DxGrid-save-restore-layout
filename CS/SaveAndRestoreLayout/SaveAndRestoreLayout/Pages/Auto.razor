@@ -11,31 +11,28 @@
     <p><em>Loading...</em></p>
 }
 else {
-    <h2>How to save and restore the grid's layout automatically</h2>    
-    <DxFormLayout>
-        <DxFormLayoutItem ColSpanMd="12">
-            <DxButton Click="ReloadPage_Click" Text="Reload page" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
-            <DxButton Click="ShowColumnChooser_Click" Text="Show column chooser" RenderStyle="ButtonRenderStyle.Secondary" CssClass="show-column-chooser-button1 button-margins" />
-            <DxButton Click="ResetLayoutButton_Click" RenderStyle="ButtonRenderStyle.Secondary" Text="Reset layout" CssClass="button-margins" />
-        </DxFormLayoutItem>
-        <DxFormLayoutItem ColSpanMd="12" CssClass="vertical-paddigns">
-            <DxGrid Data="@Forecasts"
-                    @ref=GridRef
-                    CssClass="mw-1100"
-                    PageSizeSelectorVisible="true"
-                    PageSizeSelectorAllRowsItemVisible="true"
-                    ColumnResizeMode="GridColumnResizeMode.NextColumn"
-                    ShowGroupPanel="true" ShowFilterRow="true"
-                    LayoutAutoLoading=Grid_LayoutAutoLoading
-                    LayoutAutoSaving=Grid_LayoutAutoSaving>
-                <Columns>
-                    <DxGridDataColumn Caption="Date" FieldName="Date" />
-                    <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" />
-                    <DxGridDataColumn Caption="Summary" FieldName="Summary" />
-                </Columns>
-            </DxGrid>
-        </DxFormLayoutItem>
-    </DxFormLayout>            
+    <h2>How to save and restore the grid's layout automatically</h2>
+    <div class="mb-3">
+        <DxButton Click="ReloadPageButton_Click" Text="Reload page" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
+        <DxButton Click="ShowColumnChooserButton_Click" Text="Show column chooser" RenderStyle="ButtonRenderStyle.Secondary" CssClass="show-column-chooser-button button-margins" />
+        <DxButton Click="ResetLayoutButton_Click" RenderStyle="ButtonRenderStyle.Secondary" Text="Reset layout" CssClass="button-margins" />
+    </div>
+    <DxGrid Data="@Forecasts"
+        @ref=GridRef
+        CssClass="mw-1100"
+        PageSizeSelectorVisible="true"
+        PageSizeSelectorAllRowsItemVisible="true"
+        ColumnResizeMode="GridColumnResizeMode.NextColumn"
+        ShowGroupPanel="true"
+        ShowFilterRow="true"
+        LayoutAutoLoading=Grid_LayoutAutoLoading
+        LayoutAutoSaving=Grid_LayoutAutoSaving>
+        <Columns>
+            <DxGridDataColumn Caption="Date" FieldName="Date" />
+            <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" />
+            <DxGridDataColumn Caption="Summary" FieldName="Summary" />
+        </Columns>
+    </DxGrid>
 }
 
 @code {
@@ -64,16 +61,11 @@ else {
         await RemoveLocalStorageItemAsync(LocalStorageAutomaticSaveKey);
         await RefreshPageAsync();
     }
-    async Task ReloadPage_Click() {
+    async Task ReloadPageButton_Click() {
         await RefreshPageAsync();
     }
-    void ShowColumnChooser_Click() {
-        GridRef.ShowColumnChooser(".show-column-chooser-button1");
-    }
-    async void RemoveLayout_Click() {
-        Layouts.Remove(SelectedLayout);
-        await SetLocalStorageItemAsync(LocalStorageItemsKey, JsonSerializer.Serialize(Layouts));
-        SelectedLayout = null;
+    void ShowColumnChooserButton_Click() {
+        GridRef.ShowColumnChooser(".show-column-chooser-button");
     }
     async Task RefreshPageAsync() {
         await JSRuntime.InvokeVoidAsync("location.reload");
