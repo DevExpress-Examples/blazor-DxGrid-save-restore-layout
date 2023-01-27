@@ -1,0 +1,92 @@
+﻿@page "/api"
+
+@using System.Text.Json
+@using SaveAndRestoreLayout.Data
+@using System.Collections.ObjectModel
+@inject NavigationManager uriHelper;
+@inject WeatherForecastService ForecastService
+@inject IJSRuntime JSRuntime
+
+@if (Forecasts == null) {
+    <p><em>Loading...</em></p>
+}
+else {
+    <h2>How to save and restore the grid's layout using Grid API</h2>    
+    <DxFormLayout>
+        <DxFormLayoutItem ColSpanMd="12">
+            <DxButton Click="ShowColumnChooserButton_Click" Text="Show column chooser" RenderStyle="ButtonRenderStyle.Secondary" CssClass="show-column-chooser-button button-margins" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="8" CssClass="vertical-paddigns">
+            <DxGrid Data="@Forecasts"
+                    @ref=GridRef
+                    CssClass="w-100"
+                    PageSizeSelectorVisible="true"
+                    PageSizeSelectorAllRowsItemVisible="true"
+                    ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                    ShowGroupPanel="true"
+                    ShowFilterRow="true">
+                    <Columns>
+                        <DxGridDataColumn Caption="Date" FieldName="Date" />
+                        <DxGridDataColumn Caption="Temperature" FieldName="TemperatureF" Width="120px"/>
+                        <DxGridDataColumn Caption="Summary" FieldName="Summary" />
+                    </Columns>
+            </DxGrid>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="4" CssClass="vertical-paddigns">
+            <DxListBox Data="@Layouts" TextFieldName="LayoutKey" @bind-Value="@SelectedLayout" />
+            <DxButton Click="SaveLayoutButton_Click" Text="Save current layout" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
+            <DxButton Click="LoadLayoutButton_Click" Text="Load layout" Enabled="@(SelectedLayout != null)" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
+            <DxButton Click="RemoveLayoutButton_Click" Text="Remove layout" Enabled="@(SelectedLayout != null)" RenderStyle="ButtonRenderStyle.Secondary" CssClass="button-margins" />
+        </DxFormLayoutItem>
+    </DxFormLayout>
+}
+
+@code {
+    const string LocalStorageItemsKey = "sampleItemsKey";
+    WeatherForecast[] Forecasts { get; set; }
+    IGrid GridRef { get; set; }
+    ObservableCollection<UserLayout> Layouts { get; set; } = new ObservableCollection<UserLayout>();
+    UserLayout SelectedLayout { get; set; }
+
+    protected override async Task OnInitializedAsync() {
+        Forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        var json = await GetLocalStorageItemAsync(LocalStorageItemsKey);
+        if (!string.IsNullOrEmpty(json))
+            Layouts = JsonSerializer.Deserialize<ObservableCollection<UserLayout>>(json);
+    }
+    void ShowColumnChooserButton_Click() {
+        GridRef.ShowColumnChooser(".show-column-chooser-button");
+    }
+    async void SaveLayoutButton_Click() {
+        Layouts.Add(new UserLayout() { 
+            LayoutKey = "Layout " + DateTime.Now.ToString(), 
+            Layout = GridRef.SaveLayout()
+        });
+        await SetLocalStorageItemAsync(LocalStorageItemsKey, JsonSerializer.Serialize(Layouts));
+    }
+    void LoadLayoutButton_Click() {
+        GridRef.LoadLayout(SelectedLayout.Layout);
+    }
+    async void RemoveLayoutButton_Click() {
+        Layouts.Remove(SelectedLayout);
+        SelectedLayout = null;
+        await SetLocalStorageItemAsync(LocalStorageItemsKey, JsonSerializer.Serialize(Layouts));       
+    }
+    async Task<string> GetLocalStorageItemAsync(string key) {
+        try {
+            return await JSRuntime.InvokeAsync<string>("localStorage.getItem", key);
+        }
+        catch {
+            // Mute exceptions
+            return "";
+        }
+    }
+    async Task SetLocalStorageItemAsync(string key, string value) {
+        try {
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", key, value);
+        }
+        catch {
+            // Mute exceptions
+        }
+    }
+}
