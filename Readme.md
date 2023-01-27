@@ -6,7 +6,8 @@
 
 # Grid for Blazor - Save and load layout information
 
-The DevExpress Blazor [Grid](https://docs.devexpress.com/Blazor/403143/grid) allows you to save layout information between application sessions. This example demonstrates two different approaches on how to save and restore grid layout:
+The DevExpress Blazor [Grid](https://docs.devexpress.com/Blazor/403143/grid) allows you to save layout information between application sessions. This example demonstrates two different approaches to how to save and restore a grid layout:
+
 
 * Handle the Grid's [LayoutAutoSaving](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoSaving) and [LayoutAutoLoading](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.LayoutAutoLoading) events to automatically save and restore the grid layout. On the [Auto.razor](./CS/SaveAndRestoreLayout/SaveAndRestoreLayout/Pages/Auto.razor) page, the Grid saves the current layout information to the [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) once the layout changes. When the page reloads, the Grid restores the saved layout.
 
