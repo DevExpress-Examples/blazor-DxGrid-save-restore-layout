@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
+@using DevExpress.Blazor
 @namespace SaveAndRestoreLayout.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
@@ -10,7 +11,11 @@
         <title>Save/load DxGrid's layout information</title>
     <meta name="description" content="This example illustrates how to use the LayoutAutoSaving/LayoutAutoLoading events and the SaveLayout/LoadLayout methods to save layout information to some storage" />
     <base href="~/" />
-    <link rel="stylesheet" href="css/blazing_berry/bootstrap.min.css" />
+    @foreach (var file in Themes.Fluent.GetFilePaths()) {
+        <link href="@file" rel="stylesheet" />
+    }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
     <link href="css/site.css" rel="stylesheet" />
     <link href="SaveAndRestoreLayout.styles.css" rel="stylesheet" />
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
